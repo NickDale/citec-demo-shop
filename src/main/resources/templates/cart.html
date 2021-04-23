@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header-css">
+</head>
+
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container">
+    <div class="col-3" th:if="${!products.isEmpty()}">
+        <h2 th:text="#{cart.title}"></h2>
+        <div class="card" th:each="product : ${products.entrySet()}">
+            <h3 th:text="${product.getKey().getName()}"></h3>
+            <img class="card-img-top" th:src="${product.getKey().getImageUrl()}"/>
+            <h4 th:text="${product.getValue()}"></h4>
+            <h4 th:text="${product.getKey().getPrice()}"></h4>
+            <a class="col-md-1" th:href="@{'/cart/remove/{id}'(id=${product.getKey().getId()})}">
+                <button class="btn btn-primary" th:text="#{cart.remove}" type="button"></button>
+            </a>
+            <br>
+        </div>
+    </div>
+
+    <div class="col-3" th:if="${products.isEmpty()}">
+        <h2 th:text="#{cart.empty}"></h2>
+    </div>
+
+    <br>
+    <a class="col-md-1" th:href="@{'/cart/clear/'}">
+        <button class="btn btn-info" th:text="#{cart.clear}" type="button"></button>
+    </a>
+
+    <br>
+    <div class="row">
+        <h3 th:if="${!products.isEmpty()}">
+            <span th:text="#{cart.total}"></span>
+            <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')}"></span>
+        </h3>
+        <a class="col-md-1" th:href="@{'/cart/checkout'}">
+            <button class="btn btn-success" th:text="#{cart.checkout}" type="button"></button>
+        </a>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+
+</html>
