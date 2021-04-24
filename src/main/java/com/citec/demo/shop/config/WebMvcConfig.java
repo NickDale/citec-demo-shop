@@ -52,9 +52,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-        registry.addResourceHandler("/images/**", "/css/**", "/js/**", "/static/public/**")
-                .addResourceLocations("classpath:/static/images/", "classpath:/static/css/",
-                        "classpath:/static/js/", "classpath:/static/public/");
+        registry.addResourceHandler("/images/**", "/css/**", "/js/**")
+                .addResourceLocations("classpath:/static/images/", "classpath:/static/css/", "classpath:/static/js/");
     }
 
     @Override

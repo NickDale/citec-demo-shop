@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Product findById(long id);
+    Product findById(long id); //SELECT * FROM product WHERE id = ?
 
     Product findByName(String name);
 

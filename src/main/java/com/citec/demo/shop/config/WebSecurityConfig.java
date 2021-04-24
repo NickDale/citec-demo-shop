@@ -1,6 +1,7 @@
 package com.citec.demo.shop.config;
 
 import com.citec.demo.shop.model.UserRepository;
+import com.citec.demo.shop.model.entity.Role;
 import com.citec.demo.shop.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +18,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
     private final UserRepository userRepository;
 
-    @Autowired
     public WebSecurityConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -47,11 +48,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(
-                        "/webjars/**", "/js/**", "/css/**", "/fonts/**", "/favicon/favicon.ico", "/static/public/**",
+                        "/webjars/**", "/js/**", "/css/**", "/fonts/**", "/favicon/favicon.ico",
                         "/", "/home", "/index", "/about", "/help", "/register", "/cart/**"
                 ).permitAll()
-                .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/admin/**", "/product/new").hasRole("ADMIN")
+                .antMatchers("/user/**").hasAnyAuthority("USER")
+                .antMatchers("/admin/**", "/product/new").hasAnyAuthority("ADMIN")
                 .and()
                 .formLogin().loginPage("/login").permitAll()
                 .and().logout()

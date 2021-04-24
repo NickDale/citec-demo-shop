@@ -96,17 +96,17 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
@@ -125,6 +125,10 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
+    }
+
+    public void setAuthorities(Collection<GrantedAuthority> authorities) {
+        this.authorities = authorities;
     }
 
     public String getPassword() {
@@ -192,10 +196,5 @@ public class User implements UserDetails {
         this.balance = balance;
     }
 
-    @Override
-    public String toString() {
-        return "Id: " + getId() + " User name: " + getUsername() + " E-mail: " + getEmail() + " First name: "
-                + getFirstName() + " Last name: " + getLastName() + " Age: " + getAge() + " City: " + getCity()
-                + " Gender: " + getGender() + " Balance: " + getBalance();
-    }
+
 }

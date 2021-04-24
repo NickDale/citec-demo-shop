@@ -6,8 +6,11 @@ import com.citec.demo.shop.model.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +31,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    @Autowired
     public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -38,16 +40,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
 
-        //TODO: bruteforce solution
         if (isNull(user)) throw new UsernameNotFoundException("User " + username + " not found!");
+        //TODO: bruteforce solution
         Set<GrantedAuthority> authorities = new HashSet<>();
         if (Objects.equals(username, "admin")) {
-            authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getRole()));
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
         } else {
             authorities.add(new SimpleGrantedAuthority(Role.USER.getRole()));
         }
         logger.debug(String.format("User with name: %s and password: %s created.", user.getUsername(), user.getPassword()));
-        return new User(user.getUsername(), user.getPassword(), authorities);
+        user.setAuthorities(authorities);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user,user.getPassword(),user.getAuthorities()));
+        return user;
     }
 
 
